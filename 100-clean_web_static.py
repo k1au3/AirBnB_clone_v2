@@ -1,0 +1,24 @@
+#!/usr/bin/python3
+"""
+    fab script that deletes out-of-date archives using do_clean
+"""
+
+from fabric.api import *
+import os
+
+env.user = 'ubuntu'
+env.hosts = ['34.229.63.78', '18.207.236.83']
+
+
+def do_clean(number=0):
+    """
+    delete out-of-date archives
+    """
+    if int(number) == 0:
+        num = 2
+    else:
+        num = int(number) + 1
+    cmd = 'tail -n +{}| xargs rm -rf'.format(num)
+    local('cd versions ; ls -t|{}'.format(cmd))
+    dir = '/data/web_static/releases'
+    run('cd {}; ls -t| grep web_static|{}'.format(dir, cmd))
