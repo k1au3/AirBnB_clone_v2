@@ -1,24 +1,35 @@
 #!/usr/bin/python3
-""" """
-from tests.test_models.test_base_model import test_basemodel
+""" Test for the City Module """
+import unittest
 from models.city import City
+import datetime
 
 
-class test_City(test_basemodel):
-    """ """
+class TestState(unittest.TestCase):
+    def setUp(self):
+        self.a_inst = City()
+        self.b_inst = City()
+        self.b_inst.save()
 
-    def __init__(self, *args, **kwargs):
-        """ """
-        super().__init__(*args, **kwargs)
-        self.name = "City"
-        self.value = City
+    def test_setup(self):
+        self.assertTrue(self.a_inst.id != self.b_inst.id)
+        self.assertTrue(hasattr(self.a_inst, "updated_at"))
+        self.assertTrue(hasattr(self.b_inst, "updated_at"))
+        self.assertTrue(hasattr(self.a_inst, "name"))
+        self.assertTrue(hasattr(self.b_inst, "name"))
+        self.assertTrue(hasattr(self.a_inst, "state_id"))
+        self.assertTrue(hasattr(self.b_inst, "state_id"))
+        self.assertTrue(self.a_inst.created_at != self.b_inst.created_at)
 
-    def test_state_id(self):
-        """ """
-        new = self.value()
-        self.assertEqual(type(new.state_id), str)
+    def test_types(self):
+        self.assertTrue(type(self.a_inst.created_at) is datetime.datetime)
+        self.assertTrue(type(self.a_inst.name) is str)
 
-    def test_name(self):
-        """ """
-        new = self.value()
-        self.assertEqual(type(new.name), str)
+    def test_save(self):
+        b_date = self.b_inst.updated_at
+        self.b_inst.save()
+        b_date2 = self.b_inst.updated_at
+        self.assertTrue(b_date != b_date2)
+
+if __name__ == '__main__':
+    unittest.main()

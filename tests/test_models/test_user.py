@@ -1,34 +1,50 @@
 #!/usr/bin/python3
-""" """
-from tests.test_models.test_base_model import test_basemodel
+""" Test State Module """
+import unittest
 from models.user import User
+import datetime
 
 
-class test_User(test_basemodel):
-    """ """
+class TestUser(unittest.TestCase):
+    """ Unit Tests for User Class """
+    def setUp(self):
+        """ Setup instances of the User Class """
+        self.a_inst = User()
+        self.b_inst = User()
+        self.b_inst.save()
 
-    def __init__(self, *args, **kwargs):
-        """ """
-        super().__init__(*args, **kwargs)
-        self.name = "User"
-        self.value = User
+    def test_setup(self):
+        """ Tests for creating instances """
+        self.assertTrue(self.a_inst.id != self.b_inst.id)
+        self.assertTrue(hasattr(self.a_inst, "updated_at"))
+        self.assertTrue(hasattr(self.a_inst, "email"))
+        self.assertTrue(hasattr(self.b_inst, "email"))
+        self.assertTrue(hasattr(self.a_inst, "password"))
+        self.assertTrue(hasattr(self.b_inst, "password"))
+        self.assertTrue(hasattr(self.a_inst, "first_name"))
+        self.assertTrue(hasattr(self.b_inst, "first_name"))
+        self.assertTrue(hasattr(self.a_inst, "last_name"))
+        self.assertTrue(hasattr(self.b_inst, "last_name"))
+        self.assertTrue(self.a_inst.created_at != self.b_inst.created_at)
 
-    def test_first_name(self):
-        """ """
-        new = self.value()
-        self.assertEqual(type(new.first_name), str)
+    def test_types(self):
+        """ Testing for types """
+        self.assertTrue(type(self.a_inst.created_at) is datetime.datetime)
+        self.assertTrue(type(self.a_inst.first_name) is str)
+        self.assertTrue(type(self.b_inst.first_name) is str)
+        self.assertTrue(type(self.a_inst.email) is str)
+        self.assertTrue(type(self.b_inst.email) is str)
+        self.assertTrue(type(self.a_inst.last_name) is str)
+        self.assertTrue(type(self.b_inst.last_name) is str)
+        self.assertTrue(type(self.a_inst.password) is str)
+        self.assertTrue(type(self.b_inst.password) is str)
 
-    def test_last_name(self):
-        """ """
-        new = self.value()
-        self.assertEqual(type(new.last_name), str)
+    def test_save(self):
+        """ Testing updating  """
+        b_date = self.b_inst.updated_at
+        self.b_inst.save()
+        b_date2 = self.b_inst.updated_at
+        self.assertTrue(b_date != b_date2)
 
-    def test_email(self):
-        """ """
-        new = self.value()
-        self.assertEqual(type(new.email), str)
-
-    def test_password(self):
-        """ """
-        new = self.value()
-        self.assertEqual(type(new.password), str)
+if __name__ == '__main__':
+    unittest.main()

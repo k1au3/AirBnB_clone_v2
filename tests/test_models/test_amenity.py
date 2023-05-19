@@ -1,19 +1,37 @@
 #!/usr/bin/python3
-""" """
-from tests.test_models.test_base_model import test_basemodel
+""" Test Amenity Module """
+import unittest
 from models.amenity import Amenity
+import datetime
 
 
-class test_Amenity(test_basemodel):
-    """ """
+class TestAmenity(unittest.TestCase):
+    """ Unittest for the amenity Class """
+    def setUp(self):
+        """ this funnction creates instances of amenity Class """
+        self.a_inst = Amenity()
+        self.b_inst = Amenity()
+        self.b_inst.save()
 
-    def __init__(self, *args, **kwargs):
-        """ """
-        super().__init__(*args, **kwargs)
-        self.name = "Amenity"
-        self.value = Amenity
+    def test_setup(self):
+        """ Tests for creating instances """
+        self.assertTrue(self.a_inst.id != self.b_inst.id)
+        self.assertTrue(hasattr(self.a_inst, "updated_at"))
+        self.assertTrue(hasattr(self.a_inst, "name"))
+        self.assertTrue(hasattr(self.b_inst, "name"))
+        self.assertTrue(self.a_inst.created_at != self.b_inst.created_at)
 
-    def test_name2(self):
-        """ """
-        new = self.value()
-        self.assertEqual(type(new.name), str)
+    def test_types(self):
+        """ Testing for types of classes """
+        self.assertTrue(type(self.a_inst.created_at) is datetime.datetime)
+        self.assertTrue(type(self.a_inst.name) is str)
+
+    def test_save(self):
+        """ updating the test results """
+        b_date = self.b_inst.updated_at
+        self.b_inst.save()
+        b_date2 = self.b_inst.updated_at
+        self.assertTrue(b_date != b_date2)
+
+if __name__ == '__main__':
+    unittest.main()

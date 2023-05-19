@@ -1,47 +1,35 @@
 #!/usr/bin/env bash
-#script that sets up web servers for deployment of web static
-sudo apt-get -y update
-sudo apt-get -y install nginx
+# a Bash script that sets up your web servers for the deployment of web_static
 
-sudo mkdir -p /data/web_static/shared/
-sudo mkdir -p /data/web_static/releases/test/
-filename=/data/web_static/releases/test/index.html
-sudo touch $filename
-content=\
-"<html>
+apt-get update
+apt-get -y install nginx
+# Install Nginx if it not already installed
+mkdir -p /data/web_static/releases/test/
+# Create the folder /data/ if it doesn’t already exist
+# Create the folder /data/web_static/ if it doesn’t already exist
+# Create the folder /data/web_static/releases/ if it doesn’t already exist
+# Create the folder /data/web_static/releases/test/ if it doesn’t already exist
+mkdir -p /data/web_static/shared/
+# Create the folder /data/web_static/shared/ if it doesn’t already exist
+echo '<html>
   <head>
   </head>
   <body>
     Holberton School
   </body>
-  </html>
-"
-echo -n "$content" > "$filename"
-sudo ln -sf /data/web_static/releases/test/ /data/web_static/current
-sudo chown -R ubuntu:ubuntu /data/
-printf %s "server {
-	listen 80 default_server;
-	listen [::]:80 default_server;
-	root   /var/www/html;
-	index index.html index.htm index.nginx-debian.html;
-	server_name _
-	add_header X-Served-By $HOSTNAME;
-	location / {
-		try_files \$uri \$uri/ =404;
-	}
-	
-	location /hbnb_static {
-		alias /data/web_static/current;
-		index index.html index.htm;
-	}
-	error_page 404 /custom_404.html;
-	location /custom_404.html {
-		root /var/www/error;
-		internal;
-	}
-	
-	location /redirect_me/ {
-		rewrite ^(.*)$ http://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;
-	}
-}" > /etc/nginx/sites-enabled/default
-sudo service nginx restart
+</html>' > /data/web_static/releases/test/index.html
+# Create a fake HTML file /data/web_static/releases/test/index.html
+ln -sf /data/web_static/releases/test/ /data/web_static/current
+# Create a symbolic link /data/web_static/current linked to the...
+# .../data/web_static/releases/test/ folder. If the symbolic link already...
+# ...exists, it should be deleted and recreated every time the script is ran.
+chown -hR ubuntu:ubuntu /data/
+# Give ownership of the /data/ folder to the ubuntu user AND group (you can
+# assume this user and group exist). This should be recursive; everything
+# inside should be created/owned by this user/group.
+sed -i '51 i \\n\tlocation /hbnb_static {\n\talias /data/web_static/current;\n\t}' /etc/nginx/sites-available/default
+# Update the Nginx configuration to serve the content of
+# /data/web_static/current/ to hbnb_static
+# (ex: https://mydomainname.tech/hbnb_static).
+# Don’t forget to restart Nginx after updating the configuration:
+service nginx restart
